@@ -49,10 +49,15 @@ function guiSetup() {
 
   button1 = createButton("start");
   button1.parent("#gui");
-
   button1.mousePressed(() => {
     start = !start;
     button1.html(!start ? "start" : "stop");
+  });
+
+  button1 = createButton("Restart");
+  button1.parent("#gui");
+  button1.mousePressed(() => {
+    randArr();
   });
 
   button2 = createButton("step");
