@@ -3,22 +3,21 @@ let grid = [];
 let rectSize = 100;
 let start = false;
 let runStep = false;
-let drawMode=false;
+let drawMode = false;
 function setup() {
-  createCanvas(windowHeight, windowHeight);
+  let c = createCanvas(windowHeight, windowHeight);
+  c.parent("#canvas");
   rectSize = width / resolution;
 
   guiSetup();
   randArr();
-
   frameRate(12);
   fill(255);
   noStroke();
-  
 }
 
-function clearArr(){
-  grid=[];
+function clearArr() {
+  grid = [];
   for (let i = 0; i < resolution; i++) {
     grid.push([]);
     for (let j = 0; j < resolution; j++) {
@@ -27,47 +26,73 @@ function clearArr(){
   }
 }
 
-function randArr(){
-  grid=[];
+function randArr() {
+  grid = [];
   for (let i = 0; i < resolution; i++) {
     grid.push([]);
     for (let j = 0; j < resolution; j++) {
-      grid[i].push(Math.random() > 0.5);
+      grid[i].push(Math.random() > 0.7);
     }
   }
 }
 
-function guiSetup(){
+function guiSetup() {
+  p = createP("Conway's Game of Life");
+  p.parent("#gui");
+  p.style("fontSize", "2rem");
+  p = createP("Make by <a href='https://p5js.org/'> p5.js</a>");
+  p.parent("#gui");
+
+  p = createP("Author:<a href='http://github.com/th1nhNg0/'>Th1nhNg0</a>");
+  p.parent("#gui");
+  p.style("fontSize", "1.5rem");
+
   button1 = createButton("start");
-  button1.position(width, 0);
+  button1.parent("#gui");
+
   button1.mousePressed(() => {
     start = !start;
-    button1.html(!start?'start':'stop');
+    button1.html(!start ? "start" : "stop");
   });
 
   button2 = createButton("step");
-  button2.position(width, 20);
+  button2.parent("#gui");
   button2.mousePressed(() => {
     runStep = true;
   });
 
+  div = createDiv();
+  div.parent("#gui");
+  div.style("display", "flex");
+  div.style("gap", "2rem");
+
+  p = createP("speed");
+  p.parent(div);
+  p.style("fontSize", "1.5rem");
+
   slider = createSlider(0, 60, 12);
-  slider.position(width, 40);
-  slider.input(()=>{frameRate(slider.value());})
-  
+  slider.input(() => {
+    frameRate(slider.value());
+    p2.html(slider.value());
+  });
+  slider.parent(div);
+
+  p2 = createP("1");
+  p2.parent(div);
+  p2.style("fontSize", "1.5rem");
+
   button3 = createButton("Clear");
-  button3.position(width, 60);
   button3.mousePressed(() => {
     clearArr();
   });
-  
+  button3.parent("#gui");
+
   button4 = createButton("Draw Off");
-  button4.position(width, 80);
   button4.mousePressed(() => {
-    drawMode=!drawMode;
-    button4.html(drawMode?'Draw On':'Draw Off')
+    drawMode = !drawMode;
+    button4.html(drawMode ? "Draw On" : "Draw Off");
   });
-  
+  button4.parent("#gui");
 }
 
 function runClock() {
@@ -98,7 +123,6 @@ function runClock() {
     }
   }
   grid = cpGrid;
-  
 }
 
 function draw() {
@@ -109,23 +133,23 @@ function draw() {
   }
 
   for (let i = 0; i < resolution; i++)
-    for (let j = 0; j < resolution; j++) 
+    for (let j = 0; j < resolution; j++)
       if (grid[i][j]) {
-      rect(i * rectSize, j * rectSize, rectSize, rectSize);
-    }
+        rect(i * rectSize, j * rectSize, rectSize, rectSize);
+      }
 }
 
-function mouseDragged(){
+function mouseDragged() {
   if (drawMode)
-    grid.forEach(function(e, i){
-        e.forEach(function(d,j){
-          let x1=i*rectSize;
-          let y1=j*rectSize;
-          let x2=x1+rectSize;
-          let y2=y1+rectSize;
-            if (x1<mouseX && mouseX<x2 && y1< mouseY &&mouseY<y2){
-              grid[i][j]=1;
-            }
-        });
+    grid.forEach(function (e, i) {
+      e.forEach(function (d, j) {
+        let x1 = i * rectSize;
+        let y1 = j * rectSize;
+        let x2 = x1 + rectSize;
+        let y2 = y1 + rectSize;
+        if (x1 < mouseX && mouseX < x2 && y1 < mouseY && mouseY < y2) {
+          grid[i][j] = 1;
+        }
+      });
     });
 }
